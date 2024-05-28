@@ -8,6 +8,14 @@ type Response {
 	Message string `json:"message"`
 }
 
+type UserInfoReq {
+    ID string `json:"id"`
+}
+
+type UserInfoResp {
+    Name string `json:"name"`
+}
+
 service greet-api {
 	@handler GreetHandler
 	get /from/:name (Request) returns (Response)
@@ -15,4 +23,13 @@ service greet-api {
 	@handler PingHandler
 	get /ping returns (Response)
 }
+
+@server (
+    jwt: Auth // 开启 jwt 认证
+)
+service user-api {
+    @handler userInfo
+    post /user/info (UserInfoReq) returns (UserInfoResp)
+}
+
 
