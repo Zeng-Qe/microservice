@@ -19,6 +19,7 @@ var configFile = flag.String("f", "etc/greet-api.yaml", "the config file")
 func init() {
 	conf2.DBInit()
 }
+
 func main() {
 	flag.Parse()
 
