@@ -1,5 +1,12 @@
 package test
 
+import (
+	"fmt"
+	"sync"
+	"sync/atomic"
+	"time"
+)
+
 var (
 	counter int32          //计数器
 	wg      sync.WaitGroup //信号量

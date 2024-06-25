@@ -58,7 +58,7 @@ goctl rpc protoc add.proto --go_out=./pb --go-grpc_out=./pb --zrpc_out=.
 
 #### 直接运行
 ```
-$ go run add.go -f etc/add.yaml
+$ go run greet.go -f etc/greet-api.yaml
   Starting rpc server at 127.0.0.1:8080...
   ```
 
@@ -66,4 +66,9 @@ $ go run add.go -f etc/add.yaml
 
 ```
 goctl api go -api bookstore.api -dir .
+```
+
+### docker 生成
+```
+goctl docker -go greet.go
 ```
