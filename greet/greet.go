@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/conf"
-	"github.com/zeromicro/go-zero/rest"
 	conf2 "greet/config"
 	"greet/internal/config"
 	"greet/internal/handler"
@@ -12,6 +10,9 @@ import (
 	"greet/webs"
 	"log"
 	"net/http"
+
+	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/rest"
 )
 
 var configFile = flag.String("f", "etc/greet-api.yaml", "the config file")
