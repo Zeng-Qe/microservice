@@ -72,3 +72,11 @@ goctl api go -api bookstore.api -dir .
 ```
 goctl docker -go greet.go
 ```
+
+
+### gen 自动生成
+### 注意修改里面的表名
+```
+cd cmd
+go run gen.go
+```
