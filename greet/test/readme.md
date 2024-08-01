@@ -25,3 +25,8 @@ def test_add(t *testing.T):
 
 - 在本地环境中一键测试项目中所有的单元测试：`run_env=localdev go test -v ./...`
 - 请提前改好configs/conf-localdev.yaml中的数据库配置，并确保本地环境中已经启动了数据库。
+
+- 运行其中一个示例 -v 显示日志
+```
+go test ./test/crypto_test.go -v -run TestRSA
+```
