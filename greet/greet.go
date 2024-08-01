@@ -31,7 +31,6 @@ func main() {
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
-
 	http.HandleFunc("/ws", webs.WebSocketHandler)
 	log.Println("Server started on port 8080")
 	go http.ListenAndServe(":8080", nil)

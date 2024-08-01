@@ -5,9 +5,14 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
+	"encoding/pem"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,7 +20,7 @@ import (
 // 假设这是从安全存储中获取的服务器私钥
 var serverPrivateKey *rsa.PrivateKey
 
-func init() {
+func Ninit() {
 	// 在实际应用中，应该从安全的密钥存储（如 HSM）中加载私钥
 	var err error
 	serverPrivateKey, err = rsa.GenerateKey(rand.Reader, 2048)
@@ -102,4 +107,78 @@ func SignPKCS(privateKey *rsa.PrivateKey) {
 	// 输出签名
 	log.Printf("生成的签名: %x\n", signature)
 
+}
+
+var RSAPrivateKey *rsa.PrivateKey
+
+func RsaDecryptInit(filePath string) (err error) {
+	key, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return errors.New("加载私钥错误1：" + err.Error())
+	}
+	// fmt.Println("11111", key)
+
+	block, _ := pem.Decode(key)
+	if block == nil {
+		return errors.New("加载私钥错误2：")
+	}
+
+	// privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return errors.New("加载私钥错误3：" + err.Error())
+	}
+	fmt.Println("私钥：", privateKey)
+	RSAPrivateKey = privateKey
+
+	return err
+}
+
+func GenerateRsaKey(keySize int, dirPath string) error {
+	privateKey, err := rsa.GenerateKey(rand.Reader, keySize)
+	if err != nil {
+		return err
+	}
+	// x509
+	derText := x509.MarshalPKCS1PrivateKey(privateKey)
+	// pem Block
+	block := &pem.Block{
+		Type:  "rsa private key",
+		Bytes: derText,
+	}
+	// just joint, caller must let dirPath right
+	file, err := os.Create(dirPath + "private.pem")
+	defer file.Close()
+	if err != nil {
+		return err
+	}
+	err = pem.Encode(file, block)
+	if err != nil {
+		// _, file, line, _ := runtime.Caller(0)
+		return err
+	}
+	// get PublicKey from privateKey
+	publicKey := privateKey.PublicKey
+	derStream, err := x509.MarshalPKIXPublicKey(&publicKey)
+	if err != nil {
+		// _, file, line, _ := runtime.Caller(0)
+		return err
+	}
+	block = &pem.Block{
+		Type:  "rsa public key",
+		Bytes: derStream,
+	}
+	fmt.Println("公钥：", publicKey)
+	fmt.Println("私钥：", privateKey)
+	file, err = os.Create(dirPath + "public.pem")
+	if err != nil {
+		// _, file, line, _ := runtime.Caller(0)
+		return err
+	}
+	err = pem.Encode(file, block)
+	if err != nil {
+		// _, file, line, _ := runtime.Caller(0)
+		return err
+	}
+	return nil
 }
