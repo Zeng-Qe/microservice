@@ -116,7 +116,6 @@ func RsaDecryptInit(filePath string) (err error) {
 	if err != nil {
 		return errors.New("加载私钥错误1：" + err.Error())
 	}
-	// fmt.Println("11111", key)
 
 	block, _ := pem.Decode(key)
 	if block == nil {
