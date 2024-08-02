@@ -9,6 +9,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"greet/internal/crypto"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -106,13 +107,14 @@ func Encrypt() string {
 }
 
 func TestRSA(t *testing.T) {
-	RsaDecryptInit("../rsa_key/private_key.pem")
+	crypto.GenerateRsaKey(2048, "../rsa_key/")
+	RsaDecryptInit("../rsa_key/private.pem")
 	RsaDecryptPublicInit("../rsa_key/public.pem")
 
 	password := Encrypt()
 	fmt.Println(password)
 
-	passwords, err := DecryptPassword(password)
+	passwords, err := DecryptPasswordV2(password)
 	if err != nil {
 		return
 	}

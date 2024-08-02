@@ -142,7 +142,7 @@ func GenerateRsaKey(keySize int, dirPath string) error {
 	derText := x509.MarshalPKCS1PrivateKey(privateKey)
 	// pem Block
 	block := &pem.Block{
-		Type:  "rsa private key",
+		Type:  "RSA PRIVATE KEY",
 		Bytes: derText,
 	}
 	// just joint, caller must let dirPath right
@@ -158,15 +158,17 @@ func GenerateRsaKey(keySize int, dirPath string) error {
 	}
 	// get PublicKey from privateKey
 	publicKey := privateKey.PublicKey
-	derStream, err := x509.MarshalPKIXPublicKey(&publicKey)
-	if err != nil {
-		// _, file, line, _ := runtime.Caller(0)
-		return err
-	}
+	// derStream, err := x509.MarshalPKIXPublicKey(&publicKey)
+	// if err != nil {
+	// 	// _, file, line, _ := runtime.Caller(0)
+	// 	return err
+	// }
+	derStream := x509.MarshalPKCS1PublicKey(&publicKey)
 	block = &pem.Block{
-		Type:  "rsa public key",
+		Type:  "PUBLIC KEY",
 		Bytes: derStream,
 	}
+
 	fmt.Println("公钥：", publicKey)
 	fmt.Println("私钥：", privateKey)
 	file, err = os.Create(dirPath + "public.pem")
