@@ -28,6 +28,8 @@ func main() {
 	var c config.Config
 
 	conf.MustLoad(*configFile, &c)
+	//todo:: 完善
+	// grpc.GrpcTptodbInit()
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
